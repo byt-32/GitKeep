@@ -1,8 +1,8 @@
 import React from 'react'
 import Header from './header/Header'
 import Body from './body/Body'
-import styles from '../styles/css.module.css'
-
+import WelcomeScreen from './WelcomeScreen'
+import Signup from './form/Signup'
 
 const Main = () => {
 	const [height, setHeight] = React.useState(`${window.innerHeight}px`)
@@ -13,11 +13,13 @@ const Main = () => {
 	return (
 		<section style={{
 			height: height,
+			overflowY: 'scroll',
 			display: 'flex',
 			flexDirection: 'column',
 		}}>
-			<Header />
-			<Body />
+		<Signup />
+			{/*<Header />
+			<WelcomeScreen />*/}
 		</section>
 	)
 }

@@ -9,5 +9,15 @@
       }
     ],
     "@babel/react"
+  ],
+  plugins: [
+    ['prismjs', {
+      'languages': [
+        'javascript', 'css', 'html'
+      ],
+      'plugins': ['line-numbers'],
+      'theme': 'okaidia',
+      'css': true
+    }]
   ]
 }

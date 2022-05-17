@@ -5,9 +5,10 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles({
 	body: {
-		background: '#4d5a6c',
+		background: '#424154',
 		padding: '10px 30px',
 		flex: '1',
+		display: 'flex'
 	},
 })
 

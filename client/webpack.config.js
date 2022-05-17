@@ -17,6 +17,9 @@ module.exports = {
     "port": 3000,
     "hot": true,
     "open": true,
+    'static': { 
+      directory: __dirname + '/public/'
+    },
     "proxy": {
       "/": {
         "target": "http://localhost:3000",
