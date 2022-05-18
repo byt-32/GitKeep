@@ -11,8 +11,9 @@ import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
 const useStyles = makeStyles({
 	appBar: {
 		background: '#363d48',
-		position: 'sticky'
+		position: 'sticky',
 	},
+	
 	fileName: {
 		display: 'flex',
 		alignItems: 'center',
@@ -22,39 +23,45 @@ const useStyles = makeStyles({
 			margin: '0 3px'
 		}
 	},
+	headerItem: {
+		'&& .MuiButtonBase-root:hover': {
+			background: '#7faef3'
+		}
+	},
 	upload: {
 		display: 'flex',
 		fontSize: '13px',
+		color: '#fff',
 		alignItems: 'center',
 		background: '#7faef3',
 		borderRadius: '6px',
 		cursor: 'pointer',
-		// marginLeft: '30px',
 		padding: '5px 13px 5px 5px',
 		'&& svg': {
 			fontSize: '17px',
 			margin: '0 5px'
 		}
-	}
+	},
+
 })
 
 const Header = () => {
 	const classes = useStyles()
 	return (
-		<section className={styles.header}>
-			<AppBar className={classes.appBar} >
-				<Toolbar>
-					{/*<div className={classes.fileName} >
-						<span> index.html</span>
-						<CloseIcon style={{fontSize: '11px'}} />
-					</div>*/}
-					<div className={classes.upload}>
+		<AppBar className={classes.appBar} >
+			<Toolbar className={classes.toolbar}>
+				{/*<div className={classes.fileName} >
+					<span> index.html</span>
+					<CloseIcon style={{fontSize: '11px'}} />
+				</div>*/}
+				<div className={classes.headerItem}>
+					<IconButton className={classes.upload}>
 						<CloudDownloadIcon />
 						<span> Import </span>
-					</div>
-				</Toolbar>
-			</AppBar>
-		</section>
+					</IconButton>
+				</div>
+			</Toolbar>
+		</AppBar>
 	)
 }
 

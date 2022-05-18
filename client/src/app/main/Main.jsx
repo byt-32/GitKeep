@@ -2,24 +2,25 @@ import React from 'react'
 import Header from './header/Header'
 import Body from './body/Body'
 import WelcomeScreen from './WelcomeScreen'
-import Signup from './form/Signup'
+import { Outlet } from 'react-router-dom'
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+	main: {
+		display: 'flex',
+		flexDirection: 'column',
+	}
+})
 
 const Main = () => {
+	const classes = useStyles()
 	const [height, setHeight] = React.useState(`${window.innerHeight}px`)
 	window.addEventListener('resize', () => {
 		setHeight(`${window.innerHeight}px`)
 	})
-
 	return (
-		<section style={{
-			height: height,
-			overflowY: 'scroll',
-			display: 'flex',
-			flexDirection: 'column',
-		}}>
-		<Signup />
-			{/*<Header />
-			<WelcomeScreen />*/}
+		<section className={classes.main} style={{height: height}} >
+			<Outlet />
 		</section>
 	)
 }
