@@ -1,6 +1,9 @@
 import React from 'react'
 import Main from './main/Main'
 import { createTheme, ThemeProvider } from '@material-ui/core'
+import { Routes, Route } from 'react-router-dom'
+import WelcomeScreen from './main/WelcomeScreen'
+import Signup from './main/form/Signup'
 
 const theme = createTheme({
 	primary: {
@@ -14,7 +17,12 @@ const theme = createTheme({
 const App = () => {
 	return (
 		<ThemeProvider theme={theme} >
-			<Main />
+			<Routes>
+				<Route path='/' element={<Main />} > 
+					<Route index element={<WelcomeScreen />} />
+					<Route path='/signup' element={<Signup />} />
+				</Route>
+			</Routes>
 		</ThemeProvider>
 	)
 }
