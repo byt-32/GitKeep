@@ -5,6 +5,8 @@ import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import TextField from '@material-ui/core/TextField'
 import InputAdornment from '@material-ui/core/InputAdornment'
+import Snackbar from '@material-ui/core/Snackbar'
+import Alert from '@material-ui/lab/Alert'
 
 import AlternateEmail from '@material-ui/icons/AlternateEmail'
 import AccountCircle from '@material-ui/icons/AccountCircle'
@@ -67,7 +69,10 @@ const useStyles = makeStyles({
 		}
 	},
 	textBody: {
-		'&& p': {
+		'& strong': {
+			fontFamily: 'LibreFranklin-Bold'
+		},
+		'& p': {
 			['@media (max-width: 812px)']: {
 				fontSize: '1rem'
 			},
@@ -164,12 +169,40 @@ const Signup = () => {
 	const [input, setInput] = React.useState({
 		name: '', gmail: '', password: ''
 	})
+	const [feedback, setFeedback] = React.useState({
+		open: false,
+		type: '',
+		value: ''
+	})
 
 	const handleInput = (obj) => {
 		setInput({...input, ...obj})
 	}
+	const handleClose = () => {
+		setFeedback({open: false, value: '',})
+	}
 	const handleSubmit = (e) => {
-		// e.preventDefault()
+		e.preventDefault()
+		fetch('/user/register', {
+			method: 'post',
+			headers: {
+				'content-type': 'application/json',
+			},
+			body: JSON.stringify({...input})
+		}).then(data => data.json())
+		.then(res => {
+			console.log(res)
+			if (res.type === 'error') {
+				setFeedback({
+					open: true,
+					type: res.type,
+					value: res.message
+				})
+			} else {
+				localStorage.setItem('user', JSON.stringify({...res.login}))
+				window.location.pathname = ''
+			}
+		})
 	}
 	return (
 		<> 
@@ -181,7 +214,7 @@ const Signup = () => {
 						<h1> Built for developers </h1>
 					</div>
 					<div className={classes.textBody} >
-						<p> CodeTracker was created with the developers use case in mind. It lets you <strong> track code changes in your repo in real-time</strong> . With CodeTracker you don't need to navigate your repo to see those requests (pull, merge), you get notified in real-time... </p>
+						<p> CodeTracker was created with the developers use case in mind. It lets you <strong> track code changes in your repo in real-time</strong> . With CodeTracker you don't need to navigate your repo to see those requests (pull, merge), you get notified in real-time. These are just a few perks it has to offer. Sign up to get started. </p>
 					</div>
 				</div>
 				<div className={[classes.form, classes.formProps].join(' ')}>
@@ -194,6 +227,7 @@ const Signup = () => {
 									className={classes.input} 
 									value={input.name}
 									required
+									autoComplete='username'
 									variant='outlined' 
 									placeholder='Pick a username'
 									onChange={({target}) => handleInput({name: target.value})} 
@@ -206,6 +240,7 @@ const Signup = () => {
 									id='gmail' 
 									className={classes.input} 
 									value={input.gmail}
+									autoComplete='gmail'
 									required
 									variant='outlined' 
 									placeholder='example@gmail.com'
@@ -222,6 +257,7 @@ const Signup = () => {
 									required
 						    	type={showPassword ? 'text' : 'password'}
 									variant='outlined' 
+									autoComplete='current-password'
 									placeholder='Create a strong password'
 									onChange={({target}) => handleInput({password: target.value})} 
 									InputProps={{
@@ -257,6 +293,11 @@ const Signup = () => {
 					</div>
 				</div>
 			</div>
+			<Snackbar open={feedback.open} autoHideDuration={6000} onClose={handleClose}>
+			  <Alert onClose={handleClose} severity='error'>
+			    {feedback.value}
+			  </Alert>
+			</Snackbar>
 		</section></>
 	)
 }

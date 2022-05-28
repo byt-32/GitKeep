@@ -11,10 +11,25 @@ html, body, div, button, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p
 	src: url('../../../public/fonts/Libre_Franklin/LibreFranklin-Regular.ttf');
 }
 @font-face {
+	font-family: LibreFranklin-Bold;
+	src: url('../../../public/fonts/Libre_Franklin/LibreFranklin-Bold.ttf');
+}
+@font-face {
 	font-family: Quicksand;
 	src: url('../../../public/fonts/Quicksand/Quicksand-Regular.ttf');
 }
-
 body {
-	font-family: Quicksand, Roboto, helvetica !important;
+	font-family: Libre_Franklin , Roboto, helvetica !important;
+}
+h1,h2,h3,h4,h5,h6 {
+	font-family: LibreFranklin-Bold !important;
+}
+*::-webkit-scrollbar {
+	cursor: pointer;
+	width: 5px;
+	height: 5px;
+}
+*::-webkit-scrollbar-thumb {
+	background: #fff;
+	border-radius: 10px;
 }

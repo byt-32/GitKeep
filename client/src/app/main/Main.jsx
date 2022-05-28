@@ -13,6 +13,7 @@ const useStyles = makeStyles({
 })
 
 const Main = () => {
+	const loginDetails = JSON.parse(localStorage.getItem('user'))
 	const classes = useStyles()
 	const [height, setHeight] = React.useState(`${window.innerHeight}px`)
 	window.addEventListener('resize', () => {
@@ -20,7 +21,10 @@ const Main = () => {
 	})
 	return (
 		<section className={classes.main} style={{height: height}} >
-			<Outlet />
+			{loginDetails === null ? 
+				<Outlet /> :
+				<Body />
+			}
 		</section>
 	)
 }
