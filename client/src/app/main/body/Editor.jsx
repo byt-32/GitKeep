@@ -72,6 +72,7 @@ const storeToLS = (prop, value) => {
 const Editor = ({prop}) => {
 	const classes = useStyles()
 	const dispatch = useDispatch()
+	const [input, setInput] = React.useState('')
 	const onChange = (value) => {
 		dispatch(writeFile({id: prop.created, text: value}))
 		// storeToLS(prop, value)
@@ -82,6 +83,8 @@ const Editor = ({prop}) => {
 	const onLoad = () => {
 
 	}
+	
+
 	return (
 		<section className={classes.editor}>
 			<div className={classes.editorMain}>

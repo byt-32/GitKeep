@@ -28,8 +28,13 @@ const useStyles = makeStyles({
 	},
 	menu: {
 		'& li.MuiListItem-root': {
-			padding: '5px',
+			padding: '8px',
 			position: 'relative',
+			'& a': {
+				textDecoration: 'none',
+				color: 'inherit',
+				display: 'flex'
+			},
 			'& input': {
 				position: 'absolute',
 				height: '100%',
@@ -121,8 +126,8 @@ const FilesPane = () => {
 							handleClose()
 							getfromGithub()
 						}} >
-							<GitHubIcon />
-							<Typography variant='body2' component='span'> GitHub </Typography>
+							<a href='https://github.com/login/oauth/authorize?client_id=cbfd1f279c8af1175882'> <GitHubIcon />
+							<Typography variant='body2' component='span'> GitHub </Typography></a>
 						</MenuItem>
 					</Menu>
 					<div className={classes.inputs}>

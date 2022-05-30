@@ -37,4 +37,8 @@ userRoute.post('/register', async (req, res) => {
 	}
 })
 
+userRoute.get('/callback', (req, res) => {
+	console.log(req)
+})
+
 export default userRoute
