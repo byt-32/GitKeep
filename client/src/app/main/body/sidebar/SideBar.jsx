@@ -4,27 +4,33 @@ import ImportExportIcon from '@material-ui/icons/ImportExport';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import FolderIcon from '@material-ui/icons/Folder';
 import CreateIcon from '@material-ui/icons/Create';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import SettingsIcon from '@material-ui/icons/Settings';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import { v4 as uuidv4 } from 'uuid'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import Typography from '@material-ui/core/Typography';
 import { useDispatch } from 'react-redux'
-import { storeFileContent, createFile } from '../../redux/appSlice'
+import { storeFileContent, createFile } from '../../../redux/appSlice'
+import PeopleIcon from '@material-ui/icons/People'
 
-const fileStructure = [
-	{type: 'file', files: 'index.jsx'},
-	{type: 'folder', files: ['index.jsx']},
-	{type: 'file', files: 'index.jsx'},
-]
 
 const useStyles = makeStyles({
-	filesPane: {
-		width: '30%'
+	sideBar: {
+		width: 'auto',
+		padding: '24px 0'
 	},
-	filesPaneHeader: {
+	sideBarContent: {
 		display: 'flex',
-		justifyContent: 'flex-end'
+		flexDirection: 'column',
+		justifyContent: 'space-between',
+		height: '100%'
+	},
+	sideBarHeader: {
+		display: 'flex',
+		alignItems: 'flex-end',
+		flexDirection: 'column',
 	},
 	menu: {
 		'& li.MuiListItem-root': {
@@ -42,22 +48,26 @@ const useStyles = makeStyles({
 			},
 			'& svg.MuiSvgIcon-root': {
 				fontSize: '1.4rem',
-				marginLeft: '5px'
+				marginLeft: '9px'
 			},
 			'& span.MuiTypography-body2': {
 				width: '100%',
 				textAlign: 'left',
-				margin: '0 13px'
+				margin: '0 16px'
 			}
 		},
 		
 	},
-	headerIcons: {
+	iconsParent: {
 		cursor: 'pointer',
-		margin: '10px',
+		margin: '5px 10px 10px 10px',
 		'& svg': {
-			fontSize: '2rem',
-			color: '#fff'
+			fontSize: '1.6rem',
+			transition: '.5s ease color',
+			color: '#c7c7c7',
+			'&:hover': {
+				color: '#fff'
+			}
 		}
 	},
 	inputs: {
@@ -67,7 +77,7 @@ const useStyles = makeStyles({
 	}
 })
 
-const FilesPane = () => {
+const SideBar = () => {
 	const dispatch = useDispatch()
 	const classes = useStyles()
 	const [anchorEl, setAnchorEl] = React.useState(null)
@@ -94,12 +104,15 @@ const FilesPane = () => {
 		
 	}
 	return (
-		<section className={classes.filesPane} >
-			<div className={classes.filesPaneContent}>
-				<div className={classes.filesPaneHeader}>
-					<div className={classes.headerIcons} onClick={showAddOptions}>
+		<section className={classes.sideBar} >
+			<div className={classes.sideBarContent}>
+				<div className={classes.sideBarHeader}>
+					<div className={classes.iconsParent} 
+						onClick={showAddOptions}
+					>
 						<ImportExportIcon />
 					</div>
+					
 					<Menu open={Boolean(anchorEl)}
 						className={classes.menu}
 						onClose={handleClose} anchorEl={anchorEl} >
@@ -124,6 +137,13 @@ const FilesPane = () => {
 						</MenuItem>
 						<MenuItem onClick={() => {
 							handleClose()
+							// handleCreateFile()
+						}} >
+							<CloudUploadIcon />
+							<Typography variant='body2' component='span'> Upload </Typography>
+						</MenuItem>
+						<MenuItem onClick={() => {
+							handleClose()
 							getfromGithub()
 						}} >
 							<a href='https://github.com/login/oauth/authorize?client_id=cbfd1f279c8af1175882'> <GitHubIcon />
@@ -140,9 +160,18 @@ const FilesPane = () => {
 							multiple id='folder' 
 						/>
 					</div>
+					<div className={classes.iconsParent}>
+						<PeopleIcon />
+					</div>
+					<div className={classes.iconsParent}>
+						<SettingsIcon />
+					</div>
+				</div>
+				<div className={classes.sideBarFooter}>
+					
 				</div>
 				{/*<input type='file' webkitdirectory='true' multiple />*/}
-				{/*<header className={classes.filesPaneHeader}>
+				{/*<header className={classes.sideBarHeader}>
 					<h3> FOLDERS </h3>
 				</header>
 				<section className={classes.files}>
@@ -153,4 +182,4 @@ const FilesPane = () => {
 	)
 }
 
-export default FilesPane
+export default SideBar

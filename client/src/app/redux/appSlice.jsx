@@ -1,8 +1,45 @@
 import { createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import { v4 as uuidv4 } from 'uuid'
 
+function MutateFileinLS() {
+
+	this.single = (id, attrArr) => {
+
+		if (!Array.isArray(attrArr)) throw Error(`expected an array, but got ${attrArr}`)
+
+		const files = JSON.parse(localStorage.getItem('files')) || []
+		const fileInLS = files.find(i => i.created == id)
+
+		attrArr.forEach((arr) => {
+			const [attr, value] = arr
+			fileInLS[`${attr}`] = value
+		})
+
+		localStorage.setItem('files', JSON.stringify(files))
+	}
+		
+	this.all = (attrArr) => {
+		if (!Array.isArray(attrArr)) throw Error(`expected an array, but got ${attrArr}`)
+		const files = JSON.parse(localStorage.getItem('files')) || []
+		files.forEach(file => {
+			attrArr.forEach(arr => {
+				const [attr, value] = arr
+				file[`${attr}`] = value
+			})
+		})
+		localStorage.setItem('files', JSON.stringify(files))
+	}
+}
+const editFileInLS = new MutateFileinLS()
+
 const initialState = {
-	files: [],
+	files: JSON.parse(localStorage.getItem('files')) || [],
+	showCore: false,
+	javascript: '',
+	preferences: {
+		currentTheme: 'monokai',
+		fontSize: 14
+	}
 }
 
 const appSlice = createSlice({
@@ -13,45 +50,48 @@ const appSlice = createSlice({
 			state.fileContent = action.payload
 		},
 		createFile: (state, action) => {
-			const newFile = {
-				created: Date.now(),
-				title: 'untitled',
-				active: true,
-				content: '',
-				language: 'Plain Text'
+			if (state.files.length < 4) {
+				state.files.map((prop, i) => {
+					prop.active = false
+				})
+				const newFile = {
+					created: Date.now(),
+					title: 'untitled',
+					active: true,
+					content: '',
+					star: false,
+					language: 'javascript',
+				}
+				state.files = [...state.files, newFile]
+					
+				const files = JSON.parse(localStorage.getItem('files')) || []
+				localStorage.setItem('files', JSON.stringify(state.files))
 			}
-			state.files.map((prop) => {
-				prop.active = false
-			})
-			state.files = [...state.files, newFile]
-			const files = JSON.parse(localStorage.getItem('files')) || []
-			localStorage.setItem('files', JSON.stringify([...files, newFile]))
 		},
 		closeFile: (state, action) => {
 			const id = action.payload
-			if (state.files.length > 1) {
-				const index = state.files.findIndex(i => i.created == id)
-				state.files.splice(index, 1)
-			}
-			if (state.files.findIndex(i => i.active) == -1) {
+			const index = state.files.findIndex(i => i.created == id)
+			state.files.splice(index, 1)
+
+			if (state.files.findIndex(i => i.active) == -1 && state.files.length > 0) {
 				state.files[state.files.length - 1].active = true
 			}
+
 			const files = JSON.parse(localStorage.getItem('files')) || []
-			const index = files.findIndex(i => i.created == id)
-			index != -1 && files.splice(index, 1)
+			const fileInLS = files.findIndex(i => i.created == id)
+			fileInLS != -1 && files.splice(fileInLS, 1)
 			localStorage.setItem('files', JSON.stringify(files))
 
 		},
 		setActiveFile: (state, action) => {
 			const id = action.payload
-			state.files.map((prop) => {
-				if (prop.created == id) {
-					prop.active = true
-				}
-				else {
-					prop.active = false
-				}
+			state.files.map((prop, i) => {
+				prop.active = false
 			})
+			state.files.find(i => i.created === id).active = true
+			
+			editFileInLS.all([['active', false]])
+			editFileInLS.single(id, [['active', true]])
 		},
 		setSelectedLanguage: (state, action) => {
 			const {language, id} = action.payload
@@ -60,12 +100,31 @@ const appSlice = createSlice({
 					i.language = language
 				}
 			})
+			editFileInLS.single(id, [['language', language]])
+		},
+		setPreferences: (state, action) => {
+			state.preferences = {...state.preferences, ...action.payload}
 		},
 		writeFile: (state, action) => {
 			const {id, text} = action.payload
+			const lastEdited = Date.now()
 			const index = state.files.findIndex(i => i.created == id)
 			state.files[index].content = text
-		}
+			state.files[index].lastEdited = lastEdited
+
+			editFileInLS.single(id, [['content', text], ['lastEdited', lastEdited]])
+		},
+		showCore: (state, action) => {
+			// const id = action.payload
+			// const files = JSON.parse(localStorage.getItem('files'))
+			// const idx = files.findIndex(i => i.created === id)
+			// if (idx !== -1) {
+
+			// }
+			// state.showCore = true
+
+		},
+		
 	}
 })
 export const {
@@ -74,7 +133,9 @@ export const {
 	closeFile, 
 	setActiveFile, 
 	setSelectedLanguage, 
-	writeFile
+	setPreferences,
+	writeFile,
+	showCore
 } = appSlice.actions
 
 export default appSlice.reducer

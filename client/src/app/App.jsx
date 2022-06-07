@@ -6,24 +6,21 @@ import WelcomeScreen from './main/WelcomeScreen'
 import Signup from './main/form/Signup'
 
 const theme = createTheme({
-	primary: {
-		main: '#12151a',
-	},
-	secondary: {
-		main: ''
-	}
+	// palette: {
+	// 	type: 'dark'
+	// }
 })
 
 const App = () => {
 	return (
-		<ThemeProvider theme={theme} >
+		// <ThemeProvider theme={theme} >
 			<Routes>
 				<Route path='/' element={<Main />} > 
 					<Route index element={<WelcomeScreen />} />
 					<Route path='/signup' element={<Signup />} />
 				</Route>
 			</Routes>
-		</ThemeProvider>
+		// </ThemeProvider>
 	)
 }
 

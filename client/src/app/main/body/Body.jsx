@@ -1,31 +1,28 @@
 import React from 'react'
-import CodePane from './CodePane'
-import FilesPane from './FilesPane'
+import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import BodyHeader from './BodyHeader'
+import { Routes, Route } from 'react-router-dom'
+import SplashScreen from './SplashScreen'
+import CoreScreen from './CoreScreen'
 
 const useStyles = makeStyles({
 	body: {
-		background: '#444546',
+	background: '#3c3c3c',
 		flex: '1',
 		display: 'flex',
 		flexDirection: 'column'
 	},
-	mainBody: {
-		display: 'flex',
-		height: '100%'
-	}
 })
+
 
 const Body = () => {
 	const classes = useStyles()
+	const showCore = useSelector(state => state.app.showCore)
 	return (
 		<section className={classes.body} >
 			{/*<BodyHeader />*/}
-			<section className={classes.mainBody}>
-				<CodePane />
-				<FilesPane />
-			</section>
+			<CoreScreen />
 		</section>
 	)
 }

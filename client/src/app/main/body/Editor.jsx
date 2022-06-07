@@ -70,6 +70,7 @@ const storeToLS = (prop, value) => {
 	
 }
 const Editor = ({prop}) => {
+	const {currentTheme, fontSize} = useSelector(state => state.app.preferences)
 	const classes = useStyles()
 	const dispatch = useDispatch()
 	const [input, setInput] = React.useState('')
@@ -83,14 +84,14 @@ const Editor = ({prop}) => {
 	const onLoad = () => {
 
 	}
-	
+
 
 	return (
 		<section className={classes.editor}>
 			<div className={classes.editorMain}>
 				<AceEditor
 				  mode={prop.language}
-				  theme="monokai"
+				  theme={currentTheme}
 				  name='filename'
 				  height='100%'
 				  width='100%'
@@ -99,7 +100,7 @@ const Editor = ({prop}) => {
 				  onLoad={onLoad}
 				  onChange={onChange}
 				  onChangeAnnoation={handleError}
-				  fontSize={14}
+				  fontSize={fontSize}
 				  showPrintMargin={true}
 				  showGutter={true}
 				  highlightActiveLine={true}
@@ -109,6 +110,8 @@ const Editor = ({prop}) => {
 					  enableSnippets: true,
 					  showLineNumbers: true,
 					  tabSize: 2,
+					  useWrapMode: true,
+					  indentedSoftWrap: false
 				 	}}
 				/>
 			</div>

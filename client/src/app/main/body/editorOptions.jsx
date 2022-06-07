@@ -1,21 +1,21 @@
 
 export const languages = [
+  "html",
+  "css",
   "javascript",
+  "typescript",
   "java",
+  "json",
   "python",
   "xml",
   "ruby",
   "sass",
   "markdown",
   "mysql",
-  "json",
-  "html",
   "handlebars",
   "golang",
   "csharp",
   "elixir",
-  "typescript",
-  "css"
 ];
 export const themes = [
   "monokai",
@@ -25,7 +25,7 @@ export const themes = [
   "twilight",
   "xcode",
   "textmate",
-  "solarized_dark",
+  // "solarized_dark",
   "solarized_light",
   "terminal"
 ];
