@@ -200,6 +200,14 @@ const Signup = () => {
 				})
 			} else {
 				localStorage.setItem('user', JSON.stringify({...res.login}))
+				localStorage.setItem('editorSettings', JSON.stringify({
+					color_scheme: 'monokai',
+					font_size: 14,
+					tab_size: 2,
+					"show_gutter": true,
+				  "enable_snippets": true,
+				  wrapEnabled: false
+				}))
 				window.location.pathname = ''
 			}
 		})

@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk} from '@reduxjs/toolkit'
-import { v4 as uuidv4 } from 'uuid'
 
 function MutateFileinLS() {
 
@@ -35,13 +34,14 @@ const editFileInLS = new MutateFileinLS()
 const initialState = {
 	files: JSON.parse(localStorage.getItem('files')) || [],
 	settingsVisible: false,
-	editorSettings: {
+	editorSettings: JSON.parse(localStorage.getItem('editorSettings')) || {
+		show_gutter: true,
+		enable_snippets: true,
+		wrapEnabled: false,
+		font_size: 15,
 		color_scheme: 'monokai',
-		font_size: 14,
-		tab_size: 2,
-		"show_gutter": true,
-	  "enable_snippets": true,
-	}
+		tab_size: 2
+	},
 }
 
 const appSlice = createSlice({
@@ -105,7 +105,7 @@ const appSlice = createSlice({
 			editFileInLS.single(id, [['language', language]])
 		},
 		setPreferences: (state, action) => {
-			state.editorSettings = {...state.editorSettings, ...action.payload}
+			// state.editorSettings = {...state.editorSettings, ...action.payload}
 		},
 		writeFile: (state, action) => {
 			const {id, text} = action.payload
@@ -116,10 +116,17 @@ const appSlice = createSlice({
 
 			editFileInLS.single(id, [['content', text], ['lastEdited', lastEdited]])
 		},
-		alterSettingsVisible: (state, action) => {
+		alterSettingsVisibility: (state, action) => {
 			state.settingsVisible = !state.settingsVisible
 
 		},
+		alterSettings: (state, action) => {
+			state.editorSettings = {...state.editorSettings, ...action.payload}
+			const settingsInLS = JSON.parse(localStorage.getItem('settings')) || {}
+			localStorage.setItem('editorSettings', JSON.stringify({...settingsInLS, ...action.payload}))
+		}
+	},
+	extraReducers: builder => {
 		
 	}
 })
@@ -131,7 +138,8 @@ export const {
 	setSelectedLanguage, 
 	setPreferences,
 	writeFile,
-	alterSettingsVisible
+	alterSettings,
+	alterSettingsVisibility
 } = appSlice.actions
 
 export default appSlice.reducer

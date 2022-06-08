@@ -70,7 +70,7 @@ const storeToLS = (prop, value) => {
 	
 }
 const Editor = ({prop}) => {
-	const {color_scheme, tab_size, font_size, show_gutter, enable_snippets}
+	const {color_scheme, tab_size, font_size, show_gutter, enable_snippets, wrapEnabled}
 	 = useSelector(state => state.app.editorSettings)
 
 	const classes = useStyles()
@@ -106,6 +106,7 @@ const Editor = ({prop}) => {
 				  showPrintMargin={true}
 				  showGutter={show_gutter}
 				  highlightActiveLine={true}
+				  wrapEnabled={wrapEnabled}
 				  setOptions={{
 					  enableBasicAutocompletion: true,
 					  enableLiveAutocompletion: true,

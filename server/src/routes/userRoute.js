@@ -1,5 +1,5 @@
 import express from 'express'
-import User from '../models/userModel.js'
+import User from '../models/UserModel.js'
 import { v4 as uuidv4 } from 'uuid'
 import bcrypt from 'bcrypt'
 
@@ -13,19 +13,27 @@ userRoute.post('/register', async (req, res) => {
 		body.password = await bcrypt.hash(body.password, 5)
 
 		if (findUser === null && findGmail === null) {
-			console.log(findGmail, findUser)
-
-			const newUser = await User.create({
+			const newUser = new User({
 				userId: uuidv4(),
 				name: body.name,
 				gmail: body.gmail,
 				password: body.password
 			})
-			
-			newUser && res.send({
-				type: 'success',
-				login: {name: newUser.name, gmail: newUser.gmail, id: newUser.userId}
+
+			newUser.save((err, doc) => {
+				if (doc) {
+					res.send({
+						type: 'success',
+						login: {
+							name: doc.name,
+							gmail: doc.gmail,
+							id: doc._id
+						}
+					})
+				}
 			})
+
+			
 		} else {
 			res.send({
 				type: 'error',

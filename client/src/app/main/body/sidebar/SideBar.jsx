@@ -12,7 +12,7 @@ import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import Typography from '@material-ui/core/Typography';
 import { useDispatch } from 'react-redux'
-import { storeFileContent, createFile, alterSettingsVisible } from '../../../redux/appSlice'
+import { storeFileContent, createFile, alterSettingsVisibility } from '../../../redux/appSlice'
 import PeopleIcon from '@material-ui/icons/People'
 
 
@@ -104,7 +104,7 @@ const SideBar = () => {
 		
 	}
 	const handleSettings = () => {
-		dispatch(alterSettingsVisible())
+		dispatch(alterSettingsVisibility())
 	}
 	return (
 		<section className={classes.sideBar} >

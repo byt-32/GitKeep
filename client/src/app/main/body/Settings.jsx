@@ -14,33 +14,33 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import CloseIcon from '@material-ui/icons/Close';
 import Switch from '@material-ui/core/Switch';
 import Slider from '@material-ui/core/Slider';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Typography from '@material-ui/core/Typography';
-import { alterSettingsVisible, setPreferences } from '../../redux/appSlice'
+import { alterSettingsVisibility, alterSettings } from '../../redux/appSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { themes } from './editorOptions'
 
-const obj = {
-  "color_scheme": "monokai",
-  "font_size": 14,
-  "show_gutter": true,
-  "highlight_active_line": true,
-  "enable_snippets": true,
-  "show_print_margin": true,
-  "options": {
-  	"enableBasicAutocompletion": true,
-	  "enableLiveAutocompletion": true,
-	  "enableSnippets": true,
-	  "showLineNumbers": true,
-	  "tabSize": 2,
-	  "useWrapMode": true,
-	  "indentedSoftWrap": false
-  }
-}
+// const obj = {
+//   "color_scheme": "monokai",
+//   "font_size": 14,
+//   "show_gutter": true,
+//   "highlight_active_line": true,
+//   "enable_snippets": true,
+//   "show_print_margin": true,
+//   "options": {
+//   	"enableBasicAutocompletion": true,
+// 	  "enableLiveAutocompletion": true,
+// 	  "enableSnippets": true,
+// 	  "showLineNumbers": true,
+// 	  "tabSize": 2,
+// 	  "useWrapMode": true,
+// 	  "indentedSoftWrap": false
+//   }
+// }
 
 
 const useStyles = makeStyles((theme) => ({
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 230,
+    minWidth: 242,
   },
   fontPropsItem: {
 		padding: '5px 10px',
@@ -100,25 +100,41 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
+const handleFetch = (obj) => {
+	fetch(`/settings/${JSON.parse(localStorage.getItem('user')).id}`, {
+		method: 'post',
+		headers: {
+			'content-Type': 'application/json',
+		},
+		body: JSON.stringify({obj: obj})
+	})
+	.then(res => res.json())
+	.then(obj => {
+		return obj
+	})
+}
 
 const Settings = () => {
 	const dispatch = useDispatch()
 	const classes = useStyles();
   const [openBackdrop, setBackdrop] = React.useState(true);
   const handleClose = () => {
-		dispatch(alterSettingsVisible())
+		dispatch(alterSettingsVisibility())
     setBackdrop(false);
   };
-
-  const {color_scheme, tab_size, font_size, show_gutter, enable_snippets}
-	 = useSelector(state => state.app.editorSettings)
-
-  const [showSelect, setSelectVisibility] = React.useState(false);
-  // const [selectedTheme, setSelectedTheme] = React.useState(color_scheme)
-
-  const handleModeChange = (event) => {
-    // setSelectedTheme(event.target.value);
-  };
+	const handleFetch = (obj) => {
+		fetch(`/settings/${JSON.parse(localStorage.getItem('user')).id}`, {
+			method: 'post',
+			headers: {
+				'content-Type': 'application/json',
+			},
+			body: JSON.stringify({obj: obj})
+		})
+		.then(res => res.json())
+		.then(obj => {
+			dispatch(alterSettings(obj))
+		})
+	}
 
   const handleModeClose = () => {
     setSelectVisibility(false);
@@ -127,25 +143,43 @@ const Settings = () => {
   const handleModeOpen = () => {
     setSelectVisibility(true);
   };
+  const {color_scheme, tab_size, font_size, show_gutter, enable_snippets, wrapEnabled}
+	 = useSelector(state => state.app.editorSettings)
+
+  const [showSelect, setSelectVisibility] = React.useState(false);
+
+  const handleModeChange = (event) => {
+    handleFetch({color_scheme: event.target.value})
+  };
+
   const changeFontSize = (val) => {
 		if (val === 'min') {
-			font_size > 1 && dispatch(setPreferences({font_size: font_size -1}))
+			font_size > 1 && handleFetch({font_size: font_size -1})
 		}
 
 		if (val === 'add') {
-			dispatch(setPreferences({font_size: font_size +1}))
+			handleFetch({font_size: font_size +1})
 		}
-			
 	}
-  const changeTabSize = (value) => {
+	
+	const handleSwitches = (obj) => {
+		handleFetch(obj)		
+	}
+  const changeTabSize = (val) => {
+  	if (val === 'min') {
+			tab_size > 1 && handleFetch({tab_size: tab_size -1})
+		}
 
+		if (val === 'add') {
+			handleFetch({tab_size: tab_size +1})
+		}
   }
 	return (
     <Backdrop className={classes.backdrop} open={openBackdrop}>
       <section className={classes.settings}>
-      	<div className={classes.drop}>
+      	<div className={classes.drop} onClick={handleClose} >
       	 <IconButton>
-      	 	<ArrowDownwardIcon />
+      	 	<CloseIcon style={{fontSize: '1.1rem'}} />
       	 </IconButton>
       	</div>
     		<List 
@@ -214,15 +248,17 @@ const Settings = () => {
     				<div className={classes.fontPropsItem}>
 	    				<Typography component='span'> Show gutter </Typography>
 							<span className={[classes.textProp].join(' ')}>
-	    					<Switch name='show_gutter' checked={true} onChange={() => handleSwitches('show_gutter')} />
+	    					<Switch name='show_gutter' checked={show_gutter} 
+	    						onChange={() => handleSwitches({'show_gutter': !show_gutter})} />
 	    				</span>
 	    			</div>
     			</ListItem>
     			<ListItem>
     				<div className={classes.fontPropsItem}>
-	    				<Typography component='span'> Use wrap mode </Typography>
+	    				<Typography component='span'> Wrap enabled </Typography>
 							<span className={[classes.textProp].join(' ')}>
-	    					<Switch name='useWrapMode' checked={true} onChange={() => handleSwitches('useWrapMode')} />
+	    					<Switch name='wrapEnabled' checked={wrapEnabled} 
+	    						onChange={() => handleSwitches({'wrapEnabled': !wrapEnabled})} />
 	    				</span>
 	    			</div>
     			</ListItem>
@@ -230,7 +266,8 @@ const Settings = () => {
     				<div className={classes.fontPropsItem}>
 	    				<Typography component='span'> Enable snippets </Typography>
 							<span className={[classes.textProp].join(' ')}>
-	    					<Switch name='enable_snippets' checked={true} onChange={() => handleSwitches('enable_snippets')} />
+	    					<Switch name='enable_snippets' checked={enable_snippets} 
+	    						onChange={() => handleSwitches({'enable_snippets': !enable_snippets})} />
 	    				</span>
 	    			</div>
     			</ListItem>
