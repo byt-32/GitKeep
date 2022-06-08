@@ -54,7 +54,7 @@ const useStyles = makeStyles({
 	console: {
 		// border: '2px solid #767676',
 		marginRight: '2px',
-		boxShadow: 'inset 0 0 3px 0px #fff',
+		boxShadow: 'inset 0 0 3px 0px #afafaf',
 		borderBottom: 0,
 		height: '100px',
 		display: 'flex',
@@ -138,21 +138,21 @@ const CodePaneFooter = ({language, id, content}) => {
 	   }
 	}
 	const [showConsole, setConsole] = React.useState(false)
-	const {currentTheme, fontSize} = useSelector(state => state.app.preferences)
+	const {color_scheme, font_size} = useSelector(state => state.app.editorSettings)
 	const [anchorEl, setAnchorEl] = React.useState({
 		fontProps: null, language: null, theme: null
 	})
 	const [code, execute] = React.useState(``)
 	const consoleStyle = () => {
-		if (currentTheme === 'monokai') return {background: '#272822', color: '#fff'}
-		if (currentTheme === 'github') return {background: '#fff', color: '#000'}
-		if (currentTheme === 'kuroir') return {background: '#e8e9e8', color: '#000'}
-		if (currentTheme === 'twilight') return {background: '#141414', color: '#fff'}
-		if (currentTheme === 'xcode') return {background: '#fff', color: '#000'}
-		if (currentTheme === 'textmate') return {background: '#fff', color: '#000'}
-		if (currentTheme === 'tomorrow') return {background: '#fff', color: '#000'}
-		if (currentTheme === 'solarized_light') return {background: '#fdf6e3', color: '#000'}
-		if (currentTheme === 'terminal') return {background: '#000', color: '#fff'}
+		if (color_scheme === 'monokai') return {background: '#272822', color: '#fff'}
+		if (color_scheme === 'github') return {background: '#fff', color: '#000'}
+		if (color_scheme === 'kuroir') return {background: '#e8e9e8', color: '#000'}
+		if (color_scheme === 'twilight') return {background: '#141414', color: '#fff'}
+		if (color_scheme === 'xcode') return {background: '#fff', color: '#000'}
+		if (color_scheme === 'textmate') return {background: '#fff', color: '#000'}
+		if (color_scheme === 'tomorrow') return {background: '#fff', color: '#000'}
+		if (color_scheme === 'solarized_light') return {background: '#fdf6e3', color: '#000'}
+		if (color_scheme === 'terminal') return {background: '#000', color: '#fff'}
 	}
 	const closeConsole = () => {
 		setConsole(false)
@@ -175,35 +175,15 @@ const CodePaneFooter = ({language, id, content}) => {
 	const handleClose = (el) => {
 		setAnchorEl({...anchorEl, [`${el}`]: null})
 	}
-	const [disabled, setDisabled] = React.useState({
-		iconUp: false, iconDown: false
-	})
+	
 	const openSelect = (target, language) => {
 		setAnchorEl({...anchorEl, [`${language}`]: target})
 	}
 	const setLanguage = (opt) => {
 		dispatch(setSelectedLanguage({language: opt, id: id}))
 	}
-	const setTheme = (opt) => {
-		dispatch(setPreferences({currentTheme: opt}))
-	}
-	const checkWordWrap = () => {
-		setWordWrap(!wordWrap)
-	}
-	const changeFontSize = (val) => {
-		setDisabled({iconDown: false, iconUp: false})
-
-		if (val === 'min') {
-			if (fontSize === 12) setDisabled({...disabled, iconDown: true})
-			dispatch(setPreferences({fontSize: fontSize -1}))
-		}
-
-		if (val === 'add') {
-			if (fontSize === 19) setDisabled({...disabled, iconUp: true})
-			dispatch(setPreferences({fontSize: fontSize +1}))
-		}
-			
-	}
+	
+	
 	const handleJavaScript = () => {
 		output.current !== null && (output.current.innerHTML = '')
 		try {
@@ -241,7 +221,7 @@ const CodePaneFooter = ({language, id, content}) => {
 				<section className={[classes.console].join(' ')} style={{...consoleStyle()}} >
 					<div ref={output} 
 						className={classes.output}
-						style={{color: error ? '#ff4949' : 'inherit', fontSize: `${fontSize}px`}} />
+						style={{color: error ? '#ff4949' : 'inherit', fontSize: `${font_size}px`}} />
 
 					<div className={classes.consoleActions} >
 						<IconButton onClick={clearConsole} onDoubleClick={closeConsole} >
@@ -267,71 +247,7 @@ const CodePaneFooter = ({language, id, content}) => {
 							<SyncIcon />
 						</IconButton>
 					</div>
-					{/*<div className={classes.mode}>
-						<IconButton onClick={({target}) => openSelect(target, 'theme')}>
-							<ColorLensIcon />
-						</IconButton>
-						<Menu open={Boolean(anchorEl.theme)}
-						{...menuOpts}
-					 	anchorEl={anchorEl.theme} onClose={() => handleClose('theme')} >
-						{
-							themes.map((opt, i) => {
-								return (
-									<MenuItem 
-										className={opt == currentTheme ? classes.highlightBg : ''}
-										key={i}
-										onClick={() => {
-											handleClose('theme')
-											setTheme(opt)
-										}}
-									>
-										{opt}
-									</MenuItem>
-								)
-							})
-						}
-					</Menu>
-					</div>
-					<div className={classes.fontProps}>
-						<IconButton onClick={({target}) => openSelect(target, 'fontProps')}>
-							<FormatSizeIcon />
-						</IconButton>
-						<Menu 
-							open={Boolean(anchorEl.fontProps)}
-							onClose={() => handleClose('fontProps')}
-							disableAutoFocusItem
-							anchorEl={anchorEl.fontProps}
-							anchorOrigin={{
-						    vertical: 'top',
-						    horizontal: 'left',
-						   }}
-						   transformOrigin={{
-					      vertical: 'center',
-					      horizontal: 'center',
-						   }}
-						>
-							<div className={classes.fontPropsItem}>
-								<Typography component='span'> Font size </Typography>
-								<span className={[classes.textProp, classes.fontSizeAction].join(' ')}>
-									<IconButton onClick={() => changeFontSize('min')} disabled={disabled.iconDown} >
-										<KeyboardArrowDownIcon  />
-									</IconButton>
-									<span style={{fontSize: '.9rem'}}> {fontSize} </span>
-									<IconButton onClick={() => changeFontSize('add')}  disabled={disabled.iconUp} >
-										<KeyboardArrowUpIcon />
-									</IconButton>
-								</span>
-							</div>
-							<div className={classes.fontPropsItem}> 
-								<Typography component='span'> Word wrap </Typography>
-								<span className={classes.textProp}>
-									<IconButton>
-										<Switch size="small" color='primary' checked={wordWrap} onChange={checkWordWrap} />
-									</IconButton>
-								</span>
-							</div>
-						</Menu>
-					</div>*/}
+					
 					<div className={classes.languageOpts}>
 						<span 
 							className={classes.langSelect}

@@ -22,7 +22,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import Button from '@material-ui/core/Button';
-import { closeFile, setActiveFile, showCore } from '../../redux/appSlice'
+import { closeFile, setActiveFile, alterSettingsVisible } from '../../redux/appSlice'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { Link } from 'react-router-dom'

@@ -12,7 +12,7 @@ import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import Typography from '@material-ui/core/Typography';
 import { useDispatch } from 'react-redux'
-import { storeFileContent, createFile } from '../../../redux/appSlice'
+import { storeFileContent, createFile, alterSettingsVisible } from '../../../redux/appSlice'
 import PeopleIcon from '@material-ui/icons/People'
 
 
@@ -103,6 +103,9 @@ const SideBar = () => {
 	const getfromGithub = () => {
 		
 	}
+	const handleSettings = () => {
+		dispatch(alterSettingsVisible())
+	}
 	return (
 		<section className={classes.sideBar} >
 			<div className={classes.sideBarContent}>
@@ -115,7 +118,8 @@ const SideBar = () => {
 					
 					<Menu open={Boolean(anchorEl)}
 						className={classes.menu}
-						onClose={handleClose} anchorEl={anchorEl} >
+						onClose={handleClose} 
+						anchorEl={anchorEl} >
 						{/*<label htmlFor='file'>
 							<MenuItem onClick={handleClose} >
 								<InsertDriveFileIcon />
@@ -163,7 +167,7 @@ const SideBar = () => {
 					<div className={classes.iconsParent}>
 						<PeopleIcon />
 					</div>
-					<div className={classes.iconsParent}>
+					<div className={classes.iconsParent} onClick={handleSettings}>
 						<SettingsIcon />
 					</div>
 				</div>

@@ -34,11 +34,13 @@ const editFileInLS = new MutateFileinLS()
 
 const initialState = {
 	files: JSON.parse(localStorage.getItem('files')) || [],
-	showCore: false,
-	javascript: '',
-	preferences: {
-		currentTheme: 'monokai',
-		fontSize: 14
+	settingsVisible: false,
+	editorSettings: {
+		color_scheme: 'monokai',
+		font_size: 14,
+		tab_size: 2,
+		"show_gutter": true,
+	  "enable_snippets": true,
 	}
 }
 
@@ -103,7 +105,7 @@ const appSlice = createSlice({
 			editFileInLS.single(id, [['language', language]])
 		},
 		setPreferences: (state, action) => {
-			state.preferences = {...state.preferences, ...action.payload}
+			state.editorSettings = {...state.editorSettings, ...action.payload}
 		},
 		writeFile: (state, action) => {
 			const {id, text} = action.payload
@@ -114,14 +116,8 @@ const appSlice = createSlice({
 
 			editFileInLS.single(id, [['content', text], ['lastEdited', lastEdited]])
 		},
-		showCore: (state, action) => {
-			// const id = action.payload
-			// const files = JSON.parse(localStorage.getItem('files'))
-			// const idx = files.findIndex(i => i.created === id)
-			// if (idx !== -1) {
-
-			// }
-			// state.showCore = true
+		alterSettingsVisible: (state, action) => {
+			state.settingsVisible = !state.settingsVisible
 
 		},
 		
@@ -135,7 +131,7 @@ export const {
 	setSelectedLanguage, 
 	setPreferences,
 	writeFile,
-	showCore
+	alterSettingsVisible
 } = appSlice.actions
 
 export default appSlice.reducer

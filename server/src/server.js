@@ -5,8 +5,6 @@ import mongoose from 'mongoose'
 import userRoute from './routes/userRoute.js'
 import { v4 as uuidv4 } from 'uuid'
 
-console.log(userRoute)
-
 const app = express()
 const port = process.env.PORT || 3001
 const db = mongoose.connection

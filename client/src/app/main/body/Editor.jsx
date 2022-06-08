@@ -70,7 +70,9 @@ const storeToLS = (prop, value) => {
 	
 }
 const Editor = ({prop}) => {
-	const {currentTheme, fontSize} = useSelector(state => state.app.preferences)
+	const {color_scheme, tab_size, font_size, show_gutter, enable_snippets}
+	 = useSelector(state => state.app.editorSettings)
+
 	const classes = useStyles()
 	const dispatch = useDispatch()
 	const [input, setInput] = React.useState('')
@@ -91,7 +93,7 @@ const Editor = ({prop}) => {
 			<div className={classes.editorMain}>
 				<AceEditor
 				  mode={prop.language}
-				  theme={currentTheme}
+				  theme={color_scheme}
 				  name='filename'
 				  height='100%'
 				  width='100%'
@@ -100,16 +102,16 @@ const Editor = ({prop}) => {
 				  onLoad={onLoad}
 				  onChange={onChange}
 				  onChangeAnnoation={handleError}
-				  fontSize={fontSize}
+				  fontSize={font_size}
 				  showPrintMargin={true}
-				  showGutter={true}
+				  showGutter={show_gutter}
 				  highlightActiveLine={true}
 				  setOptions={{
 					  enableBasicAutocompletion: true,
 					  enableLiveAutocompletion: true,
-					  enableSnippets: true,
+					  enableSnippets: enable_snippets,
 					  showLineNumbers: true,
-					  tabSize: 2,
+					  tabSize: tab_size,
 					  useWrapMode: true,
 					  indentedSoftWrap: false
 				 	}}
